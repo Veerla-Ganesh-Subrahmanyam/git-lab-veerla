@@ -1,0 +1,35 @@
+name: Validate Azure API Token
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'application.config'
+
+jobs:
+  validate-config:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Azure API Token
+        run: |
+          echo "Checking Azure API Token..."
+
+          if grep -q '<AzureApiToken>.*</AzureApiToken>' application.config; then
+
+            TOKEN=$(grep -oP '(?<=<AzureApiToken>).*?(?=</AzureApiToken>)' application.config)
+
+            if [ -z "$TOKEN" ]; then
+              echo "ERROR: Azure API Token is empty"
+              exit 1
+            fi
+
+            echo "Azure API Token found"
+          else
+            echo "ERROR: AzureApiToken tag not found"
+            exit 1
+          fi
