@@ -1,0 +1,21 @@
+name: Application Config Validation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'application.config'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify Pipeline Trigger
+        run: |
+          echo "application.config was modified."
+          echo "Pipeline triggered successfully."
